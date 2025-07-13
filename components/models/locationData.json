@@ -1,0 +1,16 @@
+[
+  {
+    "name": "India",
+    "states": [
+      { "name": "Uttar Pradesh", "cities": ["Lucknow", "Kanpur"] },
+      { "name": "Maharashtra", "cities": ["Mumbai", "Pune"] }
+    ]
+  },
+  {
+    "name": "United States",
+    "states": [
+      { "name": "California", "cities": ["Los Angeles", "San Francisco"] },
+      { "name": "New York", "cities": ["New York City", "Buffalo"] }
+    ]
+  }
+]

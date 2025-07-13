@@ -1,0 +1,54 @@
+/* Base wrapper */
+.rdrCalendarWrapper {
+  background: white;
+  border: 1px solid #e5e7eb; /* Tailwind gray-200 */
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-family: 'Airbnb Cereal App', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  padding: 1rem;
+}
+
+/* Month and weekday styles */
+.rdrMonthAndYearWrapper,
+.rdrWeekDays {
+  padding-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.rdrWeekDay {
+  color: #6b7280; /* Tailwind gray-500 */
+  font-size: 0.875rem;
+}
+
+/* Day styling */
+.rdrDay {
+  height: 42px;
+  width: 42px;
+}
+
+.rdrDayNumber span {
+  color: #111827; /* Tailwind gray-900 */
+  font-weight: 500;
+}
+
+/* Today */
+.rdrDayToday .rdrDayNumber span {
+  border: 1px solid #111827;
+  border-radius: 50%;
+}
+
+/* Selected range */
+.rdrSelected,
+.rdrInRange,
+.rdrStartEdge,
+.rdrEndEdge {
+  background: #ff385c !important; /* Airbnb pink */
+  color: white !important;
+}
+
+/* Disabled dates */
+.rdrDayDisabled {
+  background-color: transparent;
+  color: #d1d5db; /* Tailwind gray-300 */
+  text-decoration: line-through;
+}
