@@ -31,34 +31,37 @@ export default async function getReservation(params: IParams) {
     });
 
     const safeReservations = reservations.map((reservation) => ({
-      ...reservation,
-      startDate: reservation.startDate.toISOString(),
-      endDate: reservation.endDate.toISOString(),
-      createdAt: reservation.createdAt.toISOString(),
-      listing: {
-        ...reservation.listing,
-        createdAt: reservation.listing.createdAt.toISOString(),
-        contactPhone: reservation.listing.contactPhone || null, // ✅ Ensure it's passed
-        user: {
-          ...reservation.listing.user,
-          contactPhone: reservation.listing.user.contactPhone || null, // ✅ Include host phone
-          createdAt: reservation.listing.user.createdAt.toISOString(),
-          updatedAt: reservation.listing.user.updatedAt.toISOString(),
-          emailVerified: reservation.listing.user.emailVerified
-            ? reservation.listing.user.emailVerified.toISOString()
-            : null,
-        },
-      },
-      user: {
-        ...reservation.user,
-        phone: reservation.user.phone || null, // ✅ Include guest phone
-        createdAt: reservation.user.createdAt.toISOString(),
-        updatedAt: reservation.user.updatedAt.toISOString(),
-        emailVerified: reservation.user.emailVerified
-          ? reservation.user.emailVerified.toISOString()
-          : null,
-      },
-    }));
+  ...reservation,
+  startDate: reservation.startDate?.toISOString() || null,
+  endDate: reservation.endDate?.toISOString() || null,
+  createdAt: reservation.createdAt?.toISOString() || null,
+  updatedAt: reservation.updatedAt?.toISOString() || null,
+  listing: {
+    ...reservation.listing,
+    createdAt: reservation.listing.createdAt?.toISOString() || null,
+    updatedAt: reservation.listing.updatedAt?.toISOString() || null,
+    contactPhone: reservation.listing.contactPhone || null,
+    user: {
+      ...reservation.listing.user,
+      contactPhone: reservation.listing.user.contactPhone || null,
+      createdAt: reservation.listing.user.createdAt?.toISOString() || null,
+      updatedAt: reservation.listing.user.updatedAt?.toISOString() || null,
+      emailVerified: reservation.listing.user.emailVerified
+        ? reservation.listing.user.emailVerified.toISOString()
+        : null,
+    },
+  },
+  user: {
+    ...reservation.user,
+    phone: reservation.user.phone || null,
+    createdAt: reservation.user.createdAt?.toISOString() || null,
+    updatedAt: reservation.user.updatedAt?.toISOString() || null,
+    emailVerified: reservation.user.emailVerified
+      ? reservation.user.emailVerified.toISOString()
+      : null,
+  },
+}));
+
 
     return safeReservations;
   } catch (error: any) {

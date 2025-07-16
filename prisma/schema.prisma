@@ -28,6 +28,7 @@ model User {
   reviews        Review[]
   phone          String?   // ✅ optional phone number
   contactPhone   String?
+  razorpayAccountId   String?  // For 'host' payouts only
 }
 
 model Account {
@@ -65,6 +66,7 @@ model Listing {
   reservations  Reservation[]
   reviews       Review[]
   contactPhone   String?
+  lastModifiedBy String?
 }
 
 model Reservation {

@@ -177,9 +177,9 @@ function ListingClient({ reservations = [], listing, currentUser }: Props) {
 
         {/* ✅ Reviews moved to bottom like Airbnb */}
         <hr className="my-8" />
-        <div className="mt-6 md:mt-12">
+        {/* <div className="mt-6 md:mt-12">
           <ReviewSummary reviews={reviews} />
-        </div>
+        </div> */}
       </div>
     </Container>
   );

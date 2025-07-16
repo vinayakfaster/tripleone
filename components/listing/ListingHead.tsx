@@ -26,7 +26,7 @@ function ListingHead({
   currentUser,
 }: Props) {
   const { getByValue } = useCountries();
-  const location = getByValue(locationValue); // Optional enhancement
+  const location = getByValue(locationValue);
   const [open, setOpen] = useState(false);
 
   const visibleImages = imageSrc.slice(0, 5);
@@ -35,35 +35,38 @@ function ListingHead({
     <>
       <Heading
         title={title}
-        subtitle={location?.region && location?.label
-          ? `${location.region}, ${location.label}`
-          : locationValue}
+        subtitle={
+          location?.region && location?.label
+            ? `${location.region}, ${location.label}`
+            : locationValue
+        }
       />
 
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
+        initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.8 }}
+        transition={{ duration: 0.6 }}
         className="relative w-full overflow-hidden rounded-xl"
       >
-        <div className="grid grid-cols-4 grid-rows-2 gap-2 h-[60vh] rounded-xl overflow-hidden">
+        <div className="grid grid-cols-4 grid-rows-2 gap-[8px] h-[60vh] rounded-xl overflow-hidden">
           <div className="col-span-2 row-span-2 relative">
             <Image
               src={imageSrc[0]}
               alt="Main image"
               fill
-              className="object-cover w-full h-full"
+              priority
+              className="object-cover cursor-pointer"
               onClick={() => setOpen(true)}
             />
           </div>
 
-          {visibleImages.slice(1).map((url, index) => (
+          {visibleImages.slice(1, 5).map((url, index) => (
             <div key={index} className="relative cursor-pointer" onClick={() => setOpen(true)}>
               <Image
                 src={url}
                 alt={`Photo ${index + 2}`}
                 fill
-                className="object-cover w-full h-full"
+                className="object-cover"
               />
             </div>
           ))}
@@ -76,7 +79,7 @@ function ListingHead({
                 fill
                 className="object-cover brightness-75"
               />
-              <div className="absolute inset-0 bg-black/40 flex items-center justify-center text-white text-sm font-medium">
+              <div className="absolute inset-0 bg-black/40 flex items-center justify-center text-white text-base font-semibold">
                 Show all photos
               </div>
             </div>

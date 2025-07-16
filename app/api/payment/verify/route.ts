@@ -1,9 +1,9 @@
 // app/api/payment/verify/route.ts
+
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 import prisma from "@/lib/prismadb";
 import getCurrentUser from "@/app/actions/getCurrentUser";
-import { sendBookingEmail } from "@/lib/email";
 
 export async function POST(req: Request) {
   try {
@@ -15,12 +15,15 @@ export async function POST(req: Request) {
       amount,
       guests,
       startDate,
-      endDate
+      endDate,
     } = await req.json();
 
     const currentUser = await getCurrentUser();
-    if (!currentUser) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+    if (!currentUser) {
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+    }
 
+    // 🔐 Verify Razorpay Signature
     const body = razorpay_order_id + "|" + razorpay_payment_id;
     const expectedSignature = crypto
       .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET!)
@@ -31,9 +34,13 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
     }
 
-    // Get listing for title
+    // 🏠 Get listing info
     const listing = await prisma.listing.findUnique({ where: { id: listingId } });
+    if (!listing) {
+      return NextResponse.json({ error: "Listing not found" }, { status: 404 });
+    }
 
+    // ✅ Create Reservation
     const reservation = await prisma.reservation.create({
       data: {
         userId: currentUser.id,
@@ -50,26 +57,27 @@ export async function POST(req: Request) {
       },
     });
 
-    // ✅ Send Email
-    await sendBookingEmail({
-      to: [
-        currentUser.email!,                    // Guest
-        "admin@yourdomain.com"                 // Admin
-      ],
-      subject: `✅ New Booking: ${listing?.title}`,
-      html: `
-        <h2>New Reservation Confirmed</h2>
-        <p><strong>Guest:</strong> ${currentUser.name}</p>
-        <p><strong>Listing:</strong> ${listing?.title}</p>
-        <p><strong>Dates:</strong> ${startDate} to ${endDate}</p>
-        <p><strong>Total Price:</strong> ₹${amount / 100}</p>
-        <p><strong>Payment ID:</strong> ${razorpay_payment_id}</p>
-      `,
+    // 📧 Send Email using Resend API
+    const emailResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/emails`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        to: [currentUser.email, "hijeckerg@gmail.com"], // ✅ Send to both user & admin
+        name: currentUser.name,
+        listingTitle: listing.title,
+        checkIn: startDate,
+        checkOut: endDate,
+      }),
     });
+
+    const emailResult = await emailResponse.json();
+    console.log("📧 Email response:", emailResult);
 
     return NextResponse.json({ success: true, reservation });
   } catch (error) {
-    console.error("❌ Razorpay verification error:", error);
-    return NextResponse.json({ error: "Verification failed" }, { status: 500 });
+    console.error("❌ Verify error:", error);
+    return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
   }
 }

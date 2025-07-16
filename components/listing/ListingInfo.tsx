@@ -1,4 +1,5 @@
 "use client";
+// import { useState } from "react";
 
 import useCountries from "@/hook/useCountries";
 import { SafeUser } from "@/types";
@@ -11,8 +12,9 @@ import ListingCategory from "./ListingCategory";
 import Offers from "../Offers";
 import Sleep from "../Sleep";
 import TripShieldModal from "../models/TripShieldModal"; // ✅ your custom modal
-
+import FormattedDescription from "@/components/FormattedDescription";
 const Map = dynamic(() => import("../Map"), { ssr: false });
+
 
 type Props = {
   user: SafeUser;
@@ -43,6 +45,30 @@ function ListingInfo({
 }: Props) {
   const { getByValue } = useCountries();
   const coordinates = getByValue(locationValue)?.latlng;
+  const [showAll, setShowAll] = useState(false);
+
+ 
+    const highlights = [
+    ["🌀", "Designed for staying cool", "Beat the heat with the A/C and ceiling fan."],
+    ["🚪", "Self check-in", "You can check in with the building staff."],
+    ["📅", "Free cancellation before ", "Get a full refund if you change your mind."],
+    ["📶", "Fast Wi-Fi", "Stream, work, or game with high-speed internet."],
+    ["🛏️", "Premium bedding", "Enjoy extra-comfy pillows and fresh linens."],
+    ["🍳", "Fully-equipped kitchen", "Cook your favorite meals with all the essentials."],
+    ["🧼", "Sparkling clean", "Rated 5 stars for cleanliness by recent guests."],
+    ["🚿", "Modern bathroom", "Spacious shower with luxury toiletries."],
+    ["🧳", "Luggage drop-off", "Convenient for early arrivals or late departures."],
+    ["🎧", "Quiet space", "Perfect for remote work or undisturbed rest."],
+    ["🌇", "Great view", "Overlooks the city skyline or lush garden."],
+    ["🚗", "Easy parking", "Paid parking available right on premises."],
+    ["☕", "Coffee & tea station", "Complimentary beverages for your stay."],
+    ["📺", "Streaming-ready TV", "Watch Netflix, YouTube, and more."],
+    ["🧯", "Safety equipped", "Fire extinguisher, first aid, and smart lock."],
+    ["🔑", "24/7 access", "Check-in any time with a secure smart lock."],
+    ["📍", "Prime location", "Walkable distance to top cafes, shops, and transit."],
+  ];
+   const visibleItems = showAll ? highlights : highlights.slice(0, 6);
+  
 
   const [isTripShieldOpen, setIsTripShieldOpen] = useState(false);
 
@@ -147,16 +173,8 @@ function ListingInfo({
       <hr className="my-6" />
 
       {/* HIGHLIGHTS */}
-      <div className="space-y-6">
-        {[
-          ["🌀", "Designed for staying cool", "Beat the heat with the A/C and ceiling fan."],
-          ["🚪", "Self check-in", "You can check in with the building staff."],
-          ["📅", "Free cancellation before 17 Jul", "Get a full refund if you change your mind."],
-          ["📶", "Fast Wi-Fi", "Stream, work, or game with high-speed internet."],
-          ["🛏️", "Premium bedding", "Enjoy extra-comfy pillows and fresh linens."],
-          ["🍳", "Fully-equipped kitchen", "Cook your favorite meals with all the essentials."],
-          ["🧼", "Sparkling clean", "Rated 5 stars for cleanliness by recent guests."],
-        ].map(([icon, title, desc], i) => (
+       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
+        {visibleItems.map(([icon, title, desc], i) => (
           <div key={i} className="flex items-start space-x-4">
             <div className="text-2xl">{icon}</div>
             <div>
@@ -167,13 +185,29 @@ function ListingInfo({
         ))}
       </div>
 
+      {/* Show more button */}
+      <div className="mt-4">
+        <button
+          onClick={() => setShowAll(!showAll)}
+          className="text-sm font-medium underline text-black-600 hover:text-black-800 transition"
+        >
+          {showAll ? "Show less" : "Show more"}
+        </button>
+      </div>
+
       <hr />
 
-      <p className="text-lg font-light text-neutral-500">{description}</p>
+      <div className="space-y-4 text-neutral-700">
+  {/* <h2 className="text-2xl font-semibold">About this stay</h2> */}
 
+  {/* <p className="text-lg font-light whitespace-pre-line leading-relaxed">
+    {description}
+  </p> */}
+</div>
+<FormattedDescription description={description} />
       <hr />
 
-      <Sleep />
+      {/* <Sleep /> */}
 
       <hr />
 

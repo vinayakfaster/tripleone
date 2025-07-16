@@ -13,6 +13,8 @@ const HostPropertiesPage = async ({ params }: Props) => {
   const listings = await getListings({ userId: params.userId });
   const currentUser = await getCurrentUser();
 
+
+
   if (!listings || listings.length === 0) {
     return (
       <ClientOnly>

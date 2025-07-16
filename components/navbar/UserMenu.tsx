@@ -124,6 +124,14 @@ function UserMenu({ currentUser }: Props) {
                   />
                 )}
 
+                {currentUser?.role === "host" && (
+  <MenuItem onClick={() => router.push("/host")} label="🏘️ Host Dashboard" />
+)}
+
+
+
+
+
                 <hr />
                 <MenuItem onClick={() => signOut()} label="🚪 Logout" />
               </>

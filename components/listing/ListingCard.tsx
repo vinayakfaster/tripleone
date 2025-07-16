@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import React, { useCallback, useMemo } from "react";
 import Button from "../Button";
 import { Heart } from "lucide-react";
-
+import HeartButton from "../../components/HeartButton"
 interface Props {
   data: safeListing;
   reservation?: SafeReservation;
@@ -29,6 +29,7 @@ function ListingCard({
   actionLabel,
   actionId = "",
   layout = "grid",
+  currentUser,
 }: Props) {
   const router = useRouter();
   const { getByValue } = useCountries();
@@ -84,9 +85,9 @@ function ListingCard({
           </div>
         )}
         {/* Heart icon */}
-        <div className="absolute top-2 right-2 bg-white rounded-full p-1 shadow">
-          <Heart size={16} className="text-gray-600" />
-        </div>
+        <div className="absolute top-3 right-3">
+            <HeartButton listingId={data.id} currentUser={currentUser} />
+          </div>
       </div>
 
       {/* Text */}
