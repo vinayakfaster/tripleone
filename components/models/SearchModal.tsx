@@ -46,12 +46,13 @@ function SearchModal() {
     []
   );
 
-  const onBack = () => setStep((value) => value - 1);
-  const onNext = () => setStep((value) => value + 1);
+const onBack = useCallback(() => setStep((value) => value - 1), []);
+const onNext = useCallback(() => setStep((value) => value + 1), []);
 
-  const onSubmit = useCallback(async () => {
-    if (step !== STEPS.INFO) {
-      return onNext();
+
+ const onSubmit = useCallback(async () => {
+  if (step !== STEPS.INFO) {
+    return onNext();
     }
 
     let currentQuery = {};

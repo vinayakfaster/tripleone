@@ -5,6 +5,7 @@ import ListingCard from "@/components/listing/ListingCard";
 import getCurrentUser from "./actions/getCurrentUser";
 import getListings, { IListingsParams } from "./actions/getListings";
 import HorizontalListingRow from "@/components/listing/HorizontalListingRow";
+import Script from 'next/script';
 
 interface HomeProps {
   searchParams: IListingsParams;
@@ -21,7 +22,7 @@ export default async function Home({ searchParams }: HomeProps) {
       </ClientOnly>
     );
   }
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"  strategy="lazyOnload" ></script>
 
   const recentlyViewed = listings.slice(0, 6).map((item, idx) => ({
     ...item,

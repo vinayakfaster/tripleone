@@ -73,7 +73,7 @@ const GuestSelector = ({ maxGuests, onChange }: Props) => {
       ))}
 
       <div className="text-xs text-neutral-500 pt-2">
-        This place has a maximum of {maxGuests} guests, not including infants. Pets aren't allowed.
+        This place has a maximum of {maxGuests} guests, not including infants. Pets aren&apos;t allowed.
       </div>
     </div>
   );

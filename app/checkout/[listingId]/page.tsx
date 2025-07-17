@@ -41,7 +41,7 @@ export default function CheckoutPage() {
     };
 
     initiatePayment();
-  }, []);
+  }, [params]);
 
   return <div>Redirecting to Razorpay...</div>;
 }

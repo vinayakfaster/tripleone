@@ -6,8 +6,14 @@ type Props = {
 };
 
 function FooterColumn({ index, data }: Props) {
-  const columnItems = data.map((item, index) =>
-    index === 0 ? <h5 className="font-bold">{item}</h5> : <p>{item}</p>
+  const columnItems = data.map((item, idx) =>
+    idx === 0 ? (
+      <h5 key={idx} className="font-bold">
+        {item}
+      </h5>
+    ) : (
+      <p key={idx}>{item}</p>
+    )
   );
 
   return (
