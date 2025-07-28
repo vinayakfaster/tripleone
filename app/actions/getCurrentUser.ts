@@ -23,10 +23,15 @@ export default async function getCurrentUser() {
         name: true,
         email: true,
         image: true,
+        phone: true,
+        contactPhone: true,
+        razorpayAccountId: true,
         emailVerified: true,
         createdAt: true,
         updatedAt: true,
-        role: true, // ✅ SELECT role explicitly
+        role: true,
+        favoriteIds: true,
+        bio: true,
       },
     });
 
@@ -37,9 +42,16 @@ export default async function getCurrentUser() {
     return {
       ...currentUser,
       createdAt: currentUser.createdAt.toISOString(),
-      updatedAt: currentUser.updatedAt.toISOString(),
+      // updatedAt: currentUser.updatedAt.toISOString(), // ✅ FIXED
+      updatedAt: currentUser.updatedAt?.toISOString() || null,
+
       emailVerified: currentUser.emailVerified?.toISOString() || null,
-      role: currentUser.role, // ✅ Now this is guaranteed
+      favoriteIds: currentUser.favoriteIds || [],
+      phone: currentUser.phone ?? null,
+      contactPhone: currentUser.contactPhone ?? null,
+      razorpayAccountId: currentUser.razorpayAccountId ?? null,
+      role: currentUser.role,
+      bio: currentUser.bio ?? null,
     };
   } catch (error: any) {
     console.log("❌ getCurrentUser error:", error);

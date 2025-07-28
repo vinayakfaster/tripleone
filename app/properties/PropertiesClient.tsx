@@ -3,7 +3,7 @@
 import Container from "@/components/Container";
 import Heading from "@/components/Heading";
 import ListingCard from "@/components/listing/ListingCard";
-import { SafeUser, safeListing } from "@/types";
+import { SafeUser, SafeListing } from "@/app/types";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 import Modal from "@/components/models/Modal"; // your existing working Modal
 
 type Props = {
-  listings: safeListing[];
+  listings: SafeListing[];
   currentUser?: SafeUser | null;
 };
 
@@ -19,7 +19,7 @@ export default function PropertiesClient({ listings, currentUser }: Props) {
   const router = useRouter();
   const [deletingId, setDeletingId] = useState("");
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [editingListing, setEditingListing] = useState<safeListing | null>(null);
+  const [editingListing, setEditingListing] = useState<SafeListing | null>(null);
   const [editedTitle, setEditedTitle] = useState("");
   const [editedPrice, setEditedPrice] = useState<number>(0);
 
@@ -42,28 +42,34 @@ export default function PropertiesClient({ listings, currentUser }: Props) {
     [router]
   );
 
-  const openEditModal = (listing: safeListing) => {
+  const openEditModal = (listing: SafeListing) => {
     setEditingListing(listing);
     setEditedTitle(listing.title);
     setEditedPrice(listing.price);
     setEditModalOpen(true);
   };
 
-  const handleEditSubmit = async () => {
-    if (!editingListing) return;
+const handleEditSubmit = async () => {
+  if (!editingListing) return;
 
-    try {
-      await axios.patch(`/api/listings/${editingListing.id}/edit`, {
-        newPrice: editedPrice,
-        newTitle: editedTitle,
-      });
-      toast.success("Listing updated!");
-      setEditModalOpen(false);
-      router.refresh();
-    } catch (err) {
-      toast.error("Failed to update listing");
-    }
-  };
+  if (!editedTitle || isNaN(editedPrice)) {
+    toast.error("Please enter a valid title and price");
+    return;
+  }
+
+  try {
+    await axios.patch(`/api/listings/${editingListing.id}/edit`, {
+      newPrice: editedPrice,
+      newTitle: editedTitle,
+    });
+    toast.success("Listing updated!");
+    setEditModalOpen(false);
+    router.refresh();
+  } catch (err) {
+    toast.error("Failed to update listing");
+  }
+};
+
 
   return (
     <Container>

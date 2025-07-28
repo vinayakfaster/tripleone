@@ -5,24 +5,25 @@ import { Range } from "react-date-range";
 import Calendar from "../inputs/Calendar";
 import ReviewSummary from "../../app/reservations/ReviewSummary";
 import useLoginModal from "@/hook/useLoginModal";
-import { SafeUser } from "@/types";
+import { SafeUser } from "../../app/types";
 import Modal from "../models/Modal";
 import GuestSelector from "../inputs/GuestSelector";
 
 interface Props {
-  listingId: string;
+  currentUser?: SafeUser | null;
   price: number;
-  dateRange: Range;
+  totalPrice: number; // ✅ Add this line
   onChangeDate: (value: Range) => void;
+  dateRange: Range;
   onSubmit: (guestData: {
     adults: number;
     children: number;
     infants: number;
     pets: number;
   }) => void;
-  disabled?: boolean;
+  disabled: boolean;
   disabledDates: Date[];
-  currentUser?: SafeUser | null;
+  listingId: string;
 }
 
 function ListingReservation({

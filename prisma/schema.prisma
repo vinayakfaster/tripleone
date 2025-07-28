@@ -11,24 +11,25 @@ datasource db {
 }
 
 model User {
-  id             String        @id @default(auto()) @map("_id") @db.ObjectId
-  name           String?
-  email          String?       @unique
-  emailVerified  DateTime?
-  bio            String?
-  image          String?
-  hashedPassword String?
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  role           String        @default("user")
-  favoriteIds    String[]      @db.ObjectId
-  accounts       Account[]
-  listings       Listing[]
-  reservations   Reservation[]
-  reviews        Review[]
-  phone          String?   // ✅ optional phone number
-  contactPhone   String?
-  razorpayAccountId   String?  // For 'host' payouts only
+  id                String        @id @default(auto()) @map("_id") @db.ObjectId
+  name              String?
+  email             String?       @unique
+  emailVerified     DateTime?
+  bio               String?
+  image             String?
+  hashedPassword    String?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime?      @updatedAt
+  role              String        @default("user")
+  favoriteIds       String[]      @db.ObjectId
+  accounts          Account[]
+  listings          Listing[]
+  reservations      Reservation[]
+  reviews           Review[]
+  phone             String? // ✅ optional phone number
+  contactPhone      String?
+  razorpayAccountId String? // For 'host' payouts only
+  payouts           Payout[]
 }
 
 model Account {
@@ -66,6 +67,7 @@ model Listing {
   reservations  Reservation[]
   reviews       Review[]
   contactPhone   String?
+  updatedAt DateTime? @updatedAt
   lastModifiedBy String?
 }
 
@@ -82,6 +84,7 @@ model Reservation {
   bookedName   String?  // ✅ New: Store name at time of booking
   bookedPhone  String?  // ✅ New: Store phone at time of booking
   bookedEmail  String?  // ✅ Optional: snapshot email
+  reviewId     String?   @db.ObjectId // Optional reference to Review
 
   createdAt    DateTime @default(now())
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -101,4 +104,18 @@ model Review {
   rating         Int
   comment        String
   createdAt      DateTime    @default(now())
+}
+
+model Payout {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  payoutId String  @unique
+  amount   Float
+  currency String
+  status   String
+  notes    Json?
+  userId   String? @db.ObjectId
+  user     User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime? @updatedAt
 }

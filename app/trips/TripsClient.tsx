@@ -3,18 +3,13 @@
 import Container from "@/components/Container";
 import Heading from "@/components/Heading";
 import ListingCard from "@/components/listing/ListingCard";
-import { SafeReservation, SafeUser } from "@/types";
+import { SafeReservation, SafeUser } from "../types";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useCallback, useState } from "react";
 import { toast } from "react-toastify";
 import { isBefore, isAfter, isSameDay, setHours, setMinutes } from "date-fns";
 import { FaStar } from "react-icons/fa";
-
-
-
-
-
 
 
 

@@ -23,16 +23,18 @@ export async function DELETE(
     throw new Error("Invalid Id");
   }
 
-  const deleted = await prisma.listing.deleteMany({
-    where: {
-      id: listingId,
-      userId: currentUser.id,
-    },
+  // ✅ First check ownership
+  const listing = await prisma.listing.findUnique({
+    where: { id: listingId },
   });
 
-  if (deleted.count === 0) {
-    return NextResponse.json({ error: "Listing not found or unauthorized" }, { status: 404 });
+  if (!listing || listing.userId !== currentUser.id) {
+    return NextResponse.json({ error: "Unauthorized or listing not found" }, { status: 403 });
   }
+
+  await prisma.listing.delete({
+    where: { id: listingId },
+  });
 
   return NextResponse.json({ success: true });
 }
@@ -57,16 +59,24 @@ export async function PATCH(
     return NextResponse.json({ error: "Invalid listing ID" }, { status: 400 });
   }
 
-  const listing = await prisma.listing.update({
-    where: {
-      id: listingId,
-      userId: currentUser.id, // Optional: ensure user owns it
-    },
+  // ✅ Step 1: Check if listing exists and belongs to the user
+  const existingListing = await prisma.listing.findUnique({
+    where: { id: listingId },
+  });
+
+  if (!existingListing || existingListing.userId !== currentUser.id) {
+    return NextResponse.json({ error: "Unauthorized or listing not found" }, { status: 403 });
+  }
+
+  // ✅ Step 2: Proceed with update
+  const updatedListing = await prisma.listing.update({
+    where: { id: listingId },
     data: {
       title,
       price: parseInt(price, 10),
     },
   });
 
-  return NextResponse.json(listing);
+  return NextResponse.json(updatedListing);
+
 }

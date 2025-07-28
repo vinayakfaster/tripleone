@@ -1,6 +1,6 @@
 "use client";
 
-import { Review } from "@/types";
+import { Review } from "../../app/types";
 import { formatDistanceToNow } from "date-fns";
 
 type Props = {

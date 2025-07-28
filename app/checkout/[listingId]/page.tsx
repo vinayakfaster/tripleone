@@ -1,4 +1,3 @@
-// checkout/page.tsx
 "use client";
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
@@ -7,19 +6,28 @@ export default function CheckoutPage() {
   const params = useSearchParams();
 
   useEffect(() => {
+    if (!params) return;
+
     const initiatePayment = async () => {
+      const amount = params.get("amount");
+      const listingId = params.get("listingId");
+      const hostId = params.get("hostId");
+
+      if (!amount || !listingId || !hostId) {
+        console.error("Missing required query parameters");
+        return;
+      }
+
       const res = await fetch("/api/payment/initiate", {
         method: "POST",
-        body: JSON.stringify({
-          amount: params.get("amount"),
-          listingId: params.get("listingId"),
-          hostId: params.get("hostId"),
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount, listingId, hostId }),
       });
+
       const data = await res.json();
 
       const options = {
-        key: "RAZORPAY_KEY_ID",
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "RAZORPAY_KEY_ID", // best practice
         amount: data.amount,
         currency: "INR",
         name: "YourAppName",
@@ -28,11 +36,12 @@ export default function CheckoutPage() {
         handler: function (response: any) {
           fetch("/api/payment/verify", {
             method: "POST",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(response),
           });
         },
         prefill: {
-          email: "user@example.com", // fetch from current user
+          email: "user@example.com", // optionally get from logged-in user
         },
       };
 

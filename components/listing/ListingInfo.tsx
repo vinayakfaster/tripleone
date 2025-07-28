@@ -2,7 +2,7 @@
 // import { useState } from "react";
 
 import useCountries from "@/hook/useCountries";
-import { SafeUser } from "@/types";
+import { SafeUser } from "../../app/types";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -75,7 +75,7 @@ function ListingInfo({
   return (
     <div className="col-span-4 flex flex-col gap-8">
       {/* PHOTO TOUR */}
-      {images?.length > 0 && (
+      {/* {images?.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-2 rounded-xl overflow-hidden">
           <div className="md:col-span-2 row-span-2 relative aspect-[4/3]">
             <Image
@@ -96,7 +96,7 @@ function ListingInfo({
             </div>
           ))}
         </div>
-      )}
+      )} */}
 
       {/* HOST INFO */}
       <div className="flex flex-col gap-2">

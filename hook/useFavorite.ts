@@ -1,4 +1,4 @@
-import { SafeUser } from "@/types";
+import { SafeUser } from "../app/types";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo } from "react";

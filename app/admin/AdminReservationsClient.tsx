@@ -1,6 +1,6 @@
 "use client";
 
-import { SafeReservation, SafeUser } from "@/types";
+import { SafeReservation, SafeUser } from "../../app/types";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useCallback, useState } from "react";

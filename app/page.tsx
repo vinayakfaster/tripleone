@@ -5,15 +5,16 @@ import ListingCard from "@/components/listing/ListingCard";
 import getCurrentUser from "./actions/getCurrentUser";
 import getListings, { IListingsParams } from "./actions/getListings";
 import HorizontalListingRow from "@/components/listing/HorizontalListingRow";
-import Script from 'next/script';
+import Script from "next/script";
+import { SafeListing, SafeUser } from "../app/types";
 
 interface HomeProps {
   searchParams: IListingsParams;
 }
 
 export default async function Home({ searchParams }: HomeProps) {
-  const listings = await getListings(searchParams);
-  const currentUser = await getCurrentUser();
+  const listings: SafeListing[] = await getListings(searchParams);
+  const currentUser: SafeUser | null = await getCurrentUser();
 
   if (!listings.length) {
     return (
@@ -22,30 +23,33 @@ export default async function Home({ searchParams }: HomeProps) {
       </ClientOnly>
     );
   }
-<script src="https://checkout.razorpay.com/v1/checkout.js"  strategy="lazyOnload" ></script>
 
-  const recentlyViewed = listings.slice(0, 6).map((item, idx) => ({
+  // Helper to mark favorites and keep type
+  const markFavorite = (item: SafeListing, isFavorite: boolean): SafeListing => ({
     ...item,
-    isFavorite: idx % 2 === 0 // randomly flag guest favorite for demo
-  }));
+    isFavorite,
+  });
 
-  const chandniChowkListings = listings
+  const recentlyViewed: SafeListing[] = listings
+    .slice(0, 6)
+    .map((item, idx) => markFavorite(item, idx % 2 === 0));
+
+  const chandniChowkListings: SafeListing[] = listings
     .filter((l) => l.locationValue?.toLowerCase().includes("chandni"))
-    .map((item, idx) => ({
-      ...item,
-      isFavorite: idx % 2 !== 0 // randomly flag guest favorite for demo
-    }));
+    .map((item, idx) => markFavorite(item, idx % 2 !== 0));
 
   const shownIds = new Set([...recentlyViewed, ...chandniChowkListings].map((l) => l.id));
-  const remainingListings = listings
+
+  const remainingListings: SafeListing[] = listings
     .filter((l) => !shownIds.has(l.id))
-    .map((item, idx) => ({
-      ...item,
-      isFavorite: idx % 3 === 0
-    }));
+    .map((item, idx) => markFavorite(item, idx % 3 === 0));
 
   return (
     <ClientOnly>
+      <Script
+        src="https://checkout.razorpay.com/v1/checkout.js"
+        strategy="lazyOnload"
+      />
       <Container>
         <HorizontalListingRow
           title="Recently viewed homes"
@@ -62,7 +66,7 @@ export default async function Home({ searchParams }: HomeProps) {
         )}
 
         <div className="pt-8 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4 px-4 sm:px-8">
-          {remainingListings.map((list) => (
+          {remainingListings.map((list: SafeListing) => (
             <ListingCard
               key={list.id}
               data={list}

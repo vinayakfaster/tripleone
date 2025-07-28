@@ -5,6 +5,7 @@ import { useCallback, useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import qs from "query-string";
 import { formatISO } from "date-fns";
+import { Range } from "react-date-range"; // make sure this is imported
 
 import Calendar from "../inputs/Calendar";
 import Counter from "../inputs/Counter";
@@ -23,11 +24,13 @@ const MainSearch = ({ isCompact = false }: MainSearchProps) => {
   const [activeSection, setActiveSection] = useState<"location" | "date" | "guests" | null>(null);
 
   const [location, setLocation] = useState<any>(null);
-  const [dateRange, setDateRange] = useState({
-    startDate: null,
-    endDate: null,
-    key: "selection",
-  });
+
+const [dateRange, setDateRange] = useState<Range>({
+  startDate: undefined,
+  endDate: undefined,
+  key: "selection",
+});
+
   const [guestCount, setGuestCount] = useState(1);
 
   const onSearch = useCallback(() => {

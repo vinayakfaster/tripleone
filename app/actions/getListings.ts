@@ -75,16 +75,29 @@ export default async function getListings(params: IListingsParams) {
       };
     }
 
-    const listing = await prisma.listing.findMany({
+    const listings = await prisma.listing.findMany({
       where: query,
       orderBy: {
         createdAt: "desc",
       },
+      include: {
+        user: true,
+      },
     });
 
-    const safeListings = listing.map((list) => ({
-      ...list,
+    const safeListings = listings.map((list: typeof listings[number]) => ({      ...list,
       createdAt: list.createdAt.toISOString(),
+      updatedAt: list.updatedAt ? list.updatedAt.toISOString() : null,
+      imageSrc: (list.imageSrc as unknown[]).filter((img): img is string => typeof img === "string"),
+
+      user: {
+        ...list.user,
+        createdAt: list.user.createdAt.toISOString(),
+        updatedAt: list.user.updatedAt ? list.user.updatedAt.toISOString() : null,
+        emailVerified: list.user.emailVerified
+          ? list.user.emailVerified.toISOString()
+          : null,
+      },
     }));
 
     return safeListings;

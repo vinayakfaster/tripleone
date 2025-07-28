@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { SafeUser } from "@/types";
+import { SafeUser } from "../../app/types";
 import Container from "../Container";
 import Logo from "./Logo";
 import UserMenu from "./UserMenu";

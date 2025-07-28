@@ -1,9 +1,6 @@
-// app/api/emails/route.ts
-
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
-// Initialize with API key
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: Request) {
@@ -12,7 +9,10 @@ export async function POST(req: Request) {
     const { to, name, listingTitle, checkIn, checkOut } = body;
 
     if (!to || !listingTitle || !checkIn || !checkOut) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      );
     }
 
     const subject = `Booking Confirmed: ${listingTitle}`;
@@ -28,20 +28,26 @@ export async function POST(req: Request) {
     `;
 
     const { data, error } = await resend.emails.send({
-      from: "tripleone bookings <noreply@tripleonebookings.com/>", // must be verified
+      from: "tripleone bookings <noreply@tripleonebookings.com>", // make sure it's verified
       to,
       subject,
       html,
     });
 
-    if (error) {
-      console.error("Resend send error:", error);
-      return NextResponse.json({ error: "Failed to send email" }, { status: 500 });
+    if (error || !data) {
+      console.error("Resend send error:", error || "No data returned");
+      return NextResponse.json(
+        { error: "Failed to send email" },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({ status: "Email sent", id: data.id });
   } catch (err) {
     console.error("Email route error:", err);
-    return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Something went wrong" },
+      { status: 500 }
+    );
   }
 }

@@ -1,6 +1,25 @@
+// useCountries.ts
 import countries from "world-countries";
 
-const formattedCountries = countries.map((country) => ({
+type Country = {
+  cca2: string;
+  name: {
+    common: string;
+  };
+  flag: string;
+  latlng: [number, number];
+  region: string;
+};
+
+type FormattedCountry = {
+  value: string;
+  label: string;
+  flag: string;
+  latlng: [number, number];
+  region: string;
+};
+
+const formattedCountries: FormattedCountry[] = countries.map((country: Country) => ({
   value: country.cca2,
   label: country.name.common,
   flag: country.flag,

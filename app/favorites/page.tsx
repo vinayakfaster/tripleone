@@ -4,12 +4,12 @@ import React from "react";
 import getCurrentUser from "../actions/getCurrentUser";
 import getFavoriteListings from "../actions/getFavoriteListings";
 import FavoritesClient from "./FavoritesClient";
+import { SafeUser } from "../types";
 
 type Props = {};
 
 const FavoritePage = async (props: Props) => {
-  const currentUser = await getCurrentUser();
-  const listings = await getFavoriteListings();
+  const currentUser = await getCurrentUser() as SafeUser;
 
   if (!currentUser) {
     return (
@@ -18,6 +18,8 @@ const FavoritePage = async (props: Props) => {
       </ClientOnly>
     );
   }
+
+  const listings = await getFavoriteListings();
 
   if (listings.length === 0) {
     return (

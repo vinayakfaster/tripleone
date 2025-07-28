@@ -6,7 +6,7 @@ export async function POST(req: Request) {
   const currentUser = await getCurrentUser();
 
   if (!currentUser) {
-    return NextResponse.error();
+    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
 
   const body = await req.json();
@@ -23,6 +23,7 @@ export async function POST(req: Request) {
     contactPhone,
   } = body;
 
+  // ✅ Validate required fields
   if (
     !title ||
     !description ||
@@ -33,12 +34,13 @@ export async function POST(req: Request) {
     !guestCount ||
     !location ||
     !location.label ||
-    !price
+    price === undefined ||
+    isNaN(Number(price))
   ) {
-    return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+    return NextResponse.json({ error: "Missing or invalid fields" }, { status: 400 });
   }
 
-  // ✅ Update host's contactPhone on the user
+  // ✅ Update user's phone if provided
   if (contactPhone) {
     await prisma.user.update({
       where: { id: currentUser.id },
@@ -46,24 +48,24 @@ export async function POST(req: Request) {
     });
   }
 
+  // ✅ Create listing
   const listing = await prisma.listing.create({
-  data: {
-    title,
-    description,
-    imageSrc,
-    category,
-    roomCount,
-    bathroomCount,
-    guestCount,
-    locationValue: location.label,
-    price: parseInt(price, 10),
-    contactPhone, // ✅ Add this line
-    user: {
-      connect: { id: currentUser.id },
+    data: {
+      title,
+      description,
+      imageSrc,
+      category,
+      roomCount,
+      bathroomCount,
+      guestCount,
+      locationValue: location.label,
+      price: parseInt(price, 10),
+      contactPhone,
+      user: {
+        connect: { id: currentUser.id },
+      },
     },
-  },
-});
-
+  });
 
   return NextResponse.json(listing);
 }

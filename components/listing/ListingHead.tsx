@@ -16,6 +16,9 @@ type Props = {
   imageSrc: string[];
   id: string;
   currentUser?: any;
+  showBack?: boolean;
+  showShare?: boolean;
+  showHeart?: boolean;
 };
 
 function ListingHead({

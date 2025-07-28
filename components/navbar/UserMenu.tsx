@@ -6,7 +6,7 @@ import useRentModal from "@/hook/useRentModal";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FaHome } from "react-icons/fa";
-import { SafeUser } from "@/types";
+import { SafeUser } from "../../app/types";
 import { signOut } from "next-auth/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";

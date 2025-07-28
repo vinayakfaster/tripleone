@@ -1,7 +1,7 @@
 "use client";
 
 import useCountries from "@/hook/useCountries";
-import { SafeReservation, SafeUser, safeListing } from "@/types";
+import { SafeReservation, SafeUser, SafeListing } from "../../app/types";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -9,9 +9,9 @@ import { useRouter } from "next/navigation";
 import React, { useCallback, useMemo } from "react";
 import Button from "../Button";
 import { Heart } from "lucide-react";
-import HeartButton from "../../components/HeartButton"
+
 interface Props {
-  data: safeListing;
+  data: SafeListing;
   reservation?: SafeReservation;
   onAction?: (id: string) => void;
   disabled?: boolean;
@@ -29,7 +29,6 @@ function ListingCard({
   actionLabel,
   actionId = "",
   layout = "grid",
-  currentUser,
 }: Props) {
   const router = useRouter();
   const { getByValue } = useCountries();
@@ -55,9 +54,12 @@ function ListingCard({
     return `${format(start, "PP")} – ${format(end, "PP")}`;
   }, [reservation]);
 
-  const rating = useMemo(() => {
-    return data.rating ?? (Math.random() * 1.2 + 3.8); // 3.8 – 5.0
-  }, [data.rating]);
+type ListingWithRating = SafeListing & { rating?: number };
+
+const rating = useMemo(() => {
+  return (data as ListingWithRating).rating ?? (Math.random() * 1.2 + 3.8);
+}, [data]);
+
 
   return (
     <motion.div
@@ -85,9 +87,9 @@ function ListingCard({
           </div>
         )}
         {/* Heart icon */}
-        <div className="absolute top-3 right-3">
-            <HeartButton listingId={data.id} currentUser={currentUser} />
-          </div>
+        <div className="absolute top-2 right-2 bg-white rounded-full p-1 shadow">
+          <Heart size={16} className="text-gray-600" />
+        </div>
       </div>
 
       {/* Text */}

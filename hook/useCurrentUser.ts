@@ -2,7 +2,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { SafeUser } from "@/types";
+import { SafeUser } from "../app/types";
 
 export default function useCurrentUser() {
   const [currentUser, setCurrentUser] = useState<SafeUser | null>(null);

@@ -1,12 +1,13 @@
 import Container from "@/components/Container";
 import Heading from "@/components/Heading";
 import ListingCard from "@/components/listing/ListingCard";
-import { SafeUser, safeListing } from "@/types";
+import { SafeUser, SafeListing } from "../types";
 
 type Props = {
-  listings: safeListing[];
+  listings: SafeListing[];
   currentUser?: SafeUser | null;
 };
+
 
 function FavoritesClient({ listings, currentUser }: Props) {
   return (

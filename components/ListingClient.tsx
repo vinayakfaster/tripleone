@@ -12,7 +12,7 @@ import ListingHead from "./listing/ListingHead";
 import ListingInfo from "./listing/ListingInfo";
 import ListingReservation from "./listing/ListingReservation";
 import useLoginModel from "@/hook/useLoginModal";
-import { SafeReservation, SafeUser, safeListing, Review } from "@/types";
+import { SafeReservation, SafeUser, SafeListing, Review } from "@/app/types";
 import { categories } from "./navbar/Categories";
 import ReviewSummary from "../components/review/ReviewSummary";
 
@@ -27,7 +27,7 @@ const initialDateRange: Range = {
 
 type Props = {
   reservations?: SafeReservation[];
-  listing: safeListing & { user: SafeUser };
+  listing: SafeListing & { user: SafeUser };
   currentUser?: SafeUser | null;
 };
 
@@ -59,28 +59,41 @@ function ListingClient({ reservations = [], listing, currentUser }: Props) {
   }, [listing.id]);
 
   const onCreateReservation = useCallback(
-    (guestCount: number) => {
-      if (!currentUser) return loginModal.onOpen();
+  (guestData: {
+    adults: number;
+    children: number;
+    infants: number;
+    pets: number;
+  }) => {
+    if (!currentUser) return loginModal.onOpen();
 
-      setIsLoading(true);
-      axios
-        .post("/api/reservations", {
-          totalPrice,
-          startDate: dateRange.startDate,
-          endDate: dateRange.endDate,
-          listingId: listing?.id,
-          guestCount,
-        })
-        .then(() => {
-          toast.success("Reservation successful!");
-          setDateRange(initialDateRange);
-          router.push("/trips");
-        })
-        .catch(() => toast.error("Something went wrong"))
-        .finally(() => setIsLoading(false));
-    },
-    [totalPrice, dateRange, listing?.id, router, currentUser, loginModal]
-  );
+    const guestCount =
+      guestData.adults +
+      guestData.children +
+      guestData.infants +
+      guestData.pets;
+
+    setIsLoading(true);
+
+    axios
+      .post("/api/reservations", {
+        totalPrice,
+        startDate: dateRange.startDate,
+        endDate: dateRange.endDate,
+        listingId: listing?.id,
+        guestCount,
+      })
+      .then(() => {
+        toast.success("Reservation successful!");
+        setDateRange(initialDateRange);
+        router.push("/trips");
+      })
+      .catch(() => toast.error("Something went wrong"))
+      .finally(() => setIsLoading(false));
+  },
+  [totalPrice, dateRange, listing?.id, router, currentUser, loginModal]
+);
+
 
   useEffect(() => {
     if (dateRange.startDate && dateRange.endDate) {
@@ -112,8 +125,7 @@ function ListingClient({ reservations = [], listing, currentUser }: Props) {
             currentUser={currentUser}
             showBack
             showShare
-            showHeart
-          />
+            showHeart locationValue={""}          />
         </div>
 
         {/* Content section with reservation */}
@@ -141,16 +153,20 @@ function ListingClient({ reservations = [], listing, currentUser }: Props) {
             <hr className="my-4" />
 
             <ListingInfo
-              user={listing.user}
-              category={category}
-              description={listing.description}
-              roomCount={listing.roomCount}
-              guestCount={listing.guestCount}
-              bathroomCount={listing.bathroomCount}
-              locationValue={listing.locationValue}
-              imageSrc={listing.imageSrc}
-              hideMap={true}
-            />
+  user={listing.user}
+  category={category}
+  description={listing.description}
+  roomCount={listing.roomCount}
+  guestCount={listing.guestCount}
+  bathroomCount={listing.bathroomCount}
+  locationValue={listing.locationValue}
+  images={listing.imageSrc.map((url, index) => ({
+    url,
+    label: `Image ${index + 1}`,
+  }
+  ))}
+/>
+
 
             <div className="bg-pink-50 border border-pink-200 text-pink-800 rounded-xl px-4 py-2 mt-6 text-sm flex items-center gap-2">
               💎 Rare Find! This place is usually booked.

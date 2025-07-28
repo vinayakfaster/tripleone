@@ -34,15 +34,15 @@ export async function POST(req: Request) {
 
     const payoutAmount = Math.round(amount * 0.8) * 100; // amount in paise
 
-    const transfer = await razorpay.transfers.create({
-      account: hostRazorpayAccountId,
-      amount: payoutAmount,
-      currency: "INR",
-      notes: {
-        purpose: "Host Payout",
-      },
-      on_hold: false,
-    });
+const transfer = await razorpay.transfers.create({
+  account: hostRazorpayAccountId,
+  amount: payoutAmount,
+  currency: "INR",
+  notes: {
+    purpose: "Host Payout",
+  },
+});
+
 
     return NextResponse.json({ success: true, transfer });
   } catch (error: any) {
