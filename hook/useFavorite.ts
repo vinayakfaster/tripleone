@@ -16,7 +16,6 @@ function useFavorite({ listingId, currentUser }: Props) {
 
   const hasFavorite = useMemo(() => {
     const list = currentUser?.favoriteIds || [];
-
     return list.includes(listingId);
   }, [currentUser, listingId]);
 
@@ -41,10 +40,10 @@ function useFavorite({ listingId, currentUser }: Props) {
         router.refresh();
         toast.success("Success");
       } catch (error: any) {
-        toast.error("Something Went Wrong");
+        toast.error("Something went wrong.");
       }
     },
-    [currentUser, hasFavorite, listingId, loginModel]
+    [currentUser, hasFavorite, listingId, loginModel, router] // ✅ added router
   );
 
   return {
