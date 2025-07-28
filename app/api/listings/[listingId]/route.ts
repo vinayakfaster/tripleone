@@ -41,6 +41,7 @@ export async function DELETE(
 
 // ✅ PATCH listing (update title and price)
 
+
 export async function PATCH(
   request: Request,
   { params }: { params: IParams }
@@ -53,30 +54,34 @@ export async function PATCH(
 
   const { listingId } = params;
   const body = await request.json();
-  const { title, price } = body;
+  const { newTitle, newPrice } = body;
 
   if (!listingId || typeof listingId !== "string") {
     return NextResponse.json({ error: "Invalid listing ID" }, { status: 400 });
   }
 
-  // ✅ Step 1: Check if listing exists and belongs to the user
+  if (!newTitle || typeof newPrice !== "number" || isNaN(newPrice)) {
+    return NextResponse.json({ error: "Invalid input" }, { status: 400 });
+  }
+
   const existingListing = await prisma.listing.findUnique({
     where: { id: listingId },
   });
 
   if (!existingListing || existingListing.userId !== currentUser.id) {
-    return NextResponse.json({ error: "Unauthorized or listing not found" }, { status: 403 });
+    return NextResponse.json(
+      { error: "Unauthorized or listing not found" },
+      { status: 403 }
+    );
   }
 
-  // ✅ Step 2: Proceed with update
   const updatedListing = await prisma.listing.update({
     where: { id: listingId },
     data: {
-      title,
-      price: parseInt(price, 10),
+      title: newTitle,
+      price: newPrice, // ✅ No parseInt — already a number
     },
   });
 
   return NextResponse.json(updatedListing);
-
 }

@@ -58,7 +58,7 @@ const handleEditSubmit = async () => {
   }
 
   try {
-    await axios.patch(`/api/listings/${editingListing.id}/edit`, {
+    await axios.patch(`/api/listings/${editingListing.id}`, {
       newPrice: editedPrice,
       newTitle: editedTitle,
     });
