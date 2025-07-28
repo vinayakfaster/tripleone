@@ -15,7 +15,6 @@
     "jsx": "preserve",
     "incremental": true,
     "jsxImportSource": "react",
-    
     "plugins": [
       {
         "name": "next"
@@ -25,6 +24,12 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "app/**/*"               // ✅ ADD THIS LINE
+  ],
   "exclude": ["node_modules"]
 }
