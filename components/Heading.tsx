@@ -6,6 +6,7 @@ type Props = {
   title: string;
   subtitle?: string;
   center?: boolean;
+   white?: boolean;
 };
 
 function Heading({ title, subtitle, center }: Props) {

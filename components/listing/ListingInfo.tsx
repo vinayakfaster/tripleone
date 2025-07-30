@@ -101,7 +101,7 @@ function ListingInfo({
       {/* HOST INFO */}
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-3 text-xl font-semibold">
-          <Avatar src="/images/tripleone-avatar.png" />
+          {/* <Avatar src="/images/tripleone-avatar.png" /> */}
           <div className="flex flex-col">
             <span className="text-black font-semibold">
               Hosted and managed by <span className="text-rose-500">TripleOne</span>

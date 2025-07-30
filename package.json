@@ -2,13 +2,13 @@
   "name": "airbnb-clone",
   "version": "0.1.0",
   "private": true,
-"scripts": {
-  "dev": "next dev",
-  "build": "prisma generate && next build",
-  "start": "next start",
-  "lint": "next lint",
-  "postinstall": "prisma generate && patch-package"
-},
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "lint": "next lint",
+    "postinstall": "prisma generate && patch-package"
+  },
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
@@ -54,7 +54,7 @@
     "react-toastify": "^9.1.2",
     "react-world-flags": "^1.5.1",
     "resend": "^4.6.0",
-    "swiper": "^11.2.8",
+    "swiper": "^11.2.10",
     "swr": "^2.3.3",
     "tailwind-scrollbar": "^3.0.0",
     "world-countries": "^1.6.0",

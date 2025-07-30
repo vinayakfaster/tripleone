@@ -3,37 +3,59 @@
 @tailwind utilities;
 
 @layer base {
+  html,
+  body,
+  :root {
+    height: 100%;
+    scroll-behavior: smooth;
+    @apply text-neutral-900 bg-white;
+  }
+
   body {
     @apply !scrollbar-thin !scrollbar-track-transparent !scrollbar-thumb-[#FF5A5F];
   }
+
+  /* Prevent zoomed image overflow on mobile */
+  img {
+    @apply max-w-full h-auto object-cover;
+  }
 }
 
-html,
-body,
-:root{
-    height: 100%;
-}
-
+/* Leaflet map z-index fix */
 .leaflet-bottom,
 .leaflet-control,
 .leaflet-pane,
 .leaflet-top {
-    z-index: 0 !important;
+  z-index: 0 !important;
 }
 
+/* Date range calendar fix */
 .rdrMonth {
-    width: 100% !important;
+  width: 100% !important;
 }
 
 .rdrCalendarWrapper {
-    font-size: 16px !important;
-    width: 100% !important;
+  font-size: 16px !important;
+  width: 100% !important;
 }
 
+/* Hide scrollbars cleanly */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Airbnb-style image edge flush (for mobile) */
+.full-bleed {
+  margin-left: calc(-1 * env(safe-area-inset-left));
+  margin-right: calc(-1 * env(safe-area-inset-right));
+  width: 100vw;
+}
+
+/* Optional: Shadow and rounded styles for polished images */
+.rounded-img {
+  @apply rounded-xl shadow-md;
 }
