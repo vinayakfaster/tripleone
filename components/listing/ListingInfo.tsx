@@ -1,20 +1,15 @@
 "use client";
-// import { useState } from "react";
 
 import useCountries from "@/hook/useCountries";
 import { SafeUser } from "../../app/types";
 import dynamic from "next/dynamic";
-import Image from "next/image";
 import React, { useState } from "react";
 import { IconType } from "react-icons";
-import Avatar from "../Avatar";
 import ListingCategory from "./ListingCategory";
 import Offers from "../Offers";
-import Sleep from "../Sleep";
-import TripShieldModal from "../models/TripShieldModal"; // ✅ your custom modal
+import TripShieldModal from "../models/TripShieldModal";
 import FormattedDescription from "@/components/FormattedDescription";
 const Map = dynamic(() => import("../Map"), { ssr: false });
-
 
 type Props = {
   user: SafeUser;
@@ -22,7 +17,7 @@ type Props = {
   guestCount: number;
   roomCount: number;
   bathroomCount: number;
-  category:
+  category?:
     | {
         icon: IconType;
         label: string;
@@ -46,9 +41,9 @@ function ListingInfo({
   const { getByValue } = useCountries();
   const coordinates = getByValue(locationValue)?.latlng;
   const [showAll, setShowAll] = useState(false);
+  const [isTripShieldOpen, setIsTripShieldOpen] = useState(false);
 
- 
-    const highlights = [
+  const highlights = [
     ["🌀", "Designed for staying cool", "Beat the heat with the A/C and ceiling fan."],
     ["🚪", "Self check-in", "You can check in with the building staff."],
     ["📅", "Free cancellation before ", "Get a full refund if you change your mind."],
@@ -67,46 +62,16 @@ function ListingInfo({
     ["🔑", "24/7 access", "Check-in any time with a secure smart lock."],
     ["📍", "Prime location", "Walkable distance to top cafes, shops, and transit."],
   ];
-   const visibleItems = showAll ? highlights : highlights.slice(0, 6);
-  
 
-  const [isTripShieldOpen, setIsTripShieldOpen] = useState(false);
+  const visibleItems = showAll ? highlights : highlights.slice(0, 6);
 
   return (
-    <div className="col-span-4 flex flex-col gap-8">
-      {/* PHOTO TOUR */}
-      {/* {images?.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-2 rounded-xl overflow-hidden">
-          <div className="md:col-span-2 row-span-2 relative aspect-[4/3]">
-            <Image
-              src={images[0].url}
-              alt={images[0].label || "Image"}
-              fill
-              className="object-cover"
-            />
-          </div>
-          {images.slice(1, 5).map((img, idx) => (
-            <div key={idx} className="relative aspect-square">
-              <Image
-                src={img.url}
-                alt={img.label || `Image ${idx + 1}`}
-                fill
-                className="object-cover"
-              />
-            </div>
-          ))}
-        </div>
-      )} */}
+      <div className="w-full max-w-screen-md mx-auto px-4 sm:px-6 md:px-0 flex flex-col gap-8">
 
       {/* HOST INFO */}
       <div className="flex flex-col gap-2">
-        <div className="flex items-center gap-3 text-xl font-semibold">
-          {/* <Avatar src="/images/tripleone-avatar.png" /> */}
-          <div className="flex flex-col">
-            <span className="text-black font-semibold">
-              Hosted and managed by <span className="text-rose-500">TripleOne</span>
-            </span>
-          </div>
+        <div className="text-lg sm:text-xl font-semibold text-black">
+          Hosted and managed by <span className="text-rose-500">TripleOne</span>
         </div>
       </div>
 
@@ -123,9 +88,9 @@ function ListingInfo({
       <hr />
 
       {/* GUEST FAVOURITE */}
-      <div className="flex items-center justify-between border border-gray-300 rounded-xl px-5 py-4">
-        <div className="flex items-center space-x-3">
-          <span className="text-xl">🏅</span>
+      <div className="flex justify-between items-start gap-4 flex-wrap">
+        <div className="flex gap-3 items-start">
+          <span className="text-2xl">🏅</span>
           <div>
             <p className="font-semibold text-sm text-black">Guest favourite</p>
             <p className="text-sm text-gray-600">
@@ -133,13 +98,13 @@ function ListingInfo({
             </p>
           </div>
         </div>
-        <div className="flex items-center space-x-6 pl-4">
-          <div className="text-right pr-4 border-r border-gray-300">
-            <p className="font-semibold text-lg text-black">4.88</p>
-            <div className="text-yellow-500 text-sm leading-none">★★★★★</div>
+        <div className="flex gap-4 items-center">
+          <div className="text-right">
+            <p className="text-black text-lg font-semibold">4.88</p>
+            <p className="text-yellow-500 text-sm leading-none">★★★★★</p>
           </div>
-          <div className="text-sm text-gray-800 text-center">
-            <p className="font-semibold">{Math.floor(40 + Math.random() * 60)}</p>
+          <div className="text-center">
+            <p className="text-sm font-semibold text-black">{Math.floor(40 + Math.random() * 60)}</p>
             <p className="text-xs text-gray-500">Reviews</p>
           </div>
         </div>
@@ -147,33 +112,31 @@ function ListingInfo({
 
       <hr />
 
-      {/* ✅ TRIPSHIELD BLOCK */}
-      <div className="flex flex-col bg-[#FFF8F6] border border-rose-100 rounded-2xl p-5 md:p-6 shadow-sm">
-        <p className="text-3xl md:text-4xl font-extrabold text-[#FF5A5F] leading-tight">
+      {/* TRIPSHIELD BLOCK */}
+      <div className="bg-[#FFF8F6] p-4 rounded-xl">
+        <p className="text-3xl font-extrabold text-[#FF5A5F]">
           Trip<span className="text-black">Shield</span>
         </p>
-        <p className="text-sm md:text-base text-neutral-600 pt-3 leading-relaxed">
+        <p className="text-sm text-neutral-600 pt-3">
           Every booking includes free protection from host cancellations, inaccurate listings,
           and check-in issues — so you can book with confidence.
         </p>
         <button
           onClick={() => setIsTripShieldOpen(true)}
-          className="mt-4 inline-flex items-center gap-1 text-sm md:text-base font-semibold underline text-black hover:text-rose-500 transition"
+          className="mt-4 text-sm font-semibold underline text-black hover:text-rose-500 transition"
         >
           🔍 Learn more about TripShield
         </button>
       </div>
 
-      {/* ✅ Modal Trigger */}
       <TripShieldModal
         isOpen={isTripShieldOpen}
         onClose={() => setIsTripShieldOpen(false)}
       />
 
-      <hr className="my-6" />
-
+      <hr />
       {/* HIGHLIGHTS */}
-       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
         {visibleItems.map(([icon, title, desc], i) => (
           <div key={i} className="flex items-start space-x-4">
             <div className="text-2xl">{icon}</div>
@@ -185,11 +148,10 @@ function ListingInfo({
         ))}
       </div>
 
-      {/* Show more button */}
-      <div className="mt-4">
+      <div>
         <button
           onClick={() => setShowAll(!showAll)}
-          className="text-sm font-medium underline text-black-600 hover:text-black-800 transition"
+          className="text-sm font-medium underline text-black hover:text-black transition"
         >
           {showAll ? "Show less" : "Show more"}
         </button>
@@ -197,28 +159,21 @@ function ListingInfo({
 
       <hr />
 
-      <div className="space-y-4 text-neutral-700">
-  {/* <h2 className="text-2xl font-semibold">About this stay</h2> */}
-
-  {/* <p className="text-lg font-light whitespace-pre-line leading-relaxed">
-    {description}
-  </p> */}
-</div>
-<FormattedDescription description={description} />
-      <hr />
-
-      {/* <Sleep /> */}
+      {/* DESCRIPTION */}
+      <div className="text-neutral-700 text-base space-y-4">
+        <FormattedDescription description={description} />
+      </div>
 
       <hr />
 
       <Offers />
 
-      <hr />
-
-      {/* Optional Map */}
-      {/* <div className="mt-4 rounded-xl overflow-hidden w-full h-[40vh]">
+      {/* Optional Map (disabled by default) */}
+      {/*
+      <div className="mt-4 overflow-hidden w-full h-[40vh]">
         <Map center={coordinates} locationValue={locationValue} />
-      </div> */}
+      </div>
+      */}
     </div>
   );
 }

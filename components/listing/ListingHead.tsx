@@ -9,9 +9,8 @@ import Lightbox from "yet-another-react-lightbox";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
 import "yet-another-react-lightbox/styles.css";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from "swiper/modules";
+import { Pagination } from "swiper/modules";
 import "swiper/css";
-import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 type Props = {
@@ -44,20 +43,19 @@ function ListingHead({
         <Heading title={title} subtitle={locationLabel} />
       </div>
 
-      {/* ✅ Mobile Slider View - Styled like Airbnb */}
-      <div className="relative w-full overflow-hidden lg:hidden rounded-xl mb-6">
+      {/* ✅ Mobile Swiper (Airbnb-style) */}
+      <div className="relative w-screen left-1/2 -translate-x-1/2 overflow-hidden lg:hidden mb-4">
         <Swiper
-          modules={[Pagination, Navigation]}
+          modules={[Pagination]}
           pagination={{ clickable: true }}
-          navigation={false}
-          spaceBetween={10}
+          spaceBetween={0}
           slidesPerView={1}
-          className="rounded-xl"
+          className="w-full h-[280px]"
         >
           {imageSrc.map((src, index) => (
             <SwiperSlide key={index}>
               <div
-                className="relative h-[250px] w-full rounded-xl overflow-hidden cursor-pointer"
+                className="relative w-full h-full cursor-pointer"
                 onClick={() => setOpen(true)}
               >
                 <Image
@@ -65,20 +63,20 @@ function ListingHead({
                   alt={`Slide ${index + 1}`}
                   fill
                   priority={index === 0}
-                  className="object-cover transition duration-300 ease-in-out"
+                  className="object-cover"
                 />
               </div>
             </SwiperSlide>
           ))}
         </Swiper>
 
-        {/* ❤️ HeartButton (top right corner) */}
-        <div className="absolute top-3 right-3 z-10">
+        {/* ❤️ HeartButton over mobile slider */}
+        <div className="absolute top-4 right-4 z-10">
           <HeartButton listingId={id} currentUser={currentUser} />
         </div>
       </div>
 
-      {/* 🖥️ Desktop Grid Layout */}
+      {/* 🖥️ Desktop Image Grid */}
       <div className="relative w-full overflow-hidden rounded-xl hidden lg:block mb-6">
         <div className="grid grid-cols-4 grid-rows-2 gap-[8px] h-[60vh] rounded-xl overflow-hidden">
           {/* Main Image */}
@@ -109,7 +107,7 @@ function ListingHead({
             </div>
           ))}
 
-          {/* Show All */}
+          {/* Show all photos */}
           {imageSrc.length > 5 && (
             <div
               className="relative cursor-pointer"
@@ -133,7 +131,7 @@ function ListingHead({
         </div>
       </div>
 
-      {/* 🔍 Lightbox Fullscreen Viewer */}
+      {/* 🔍 Lightbox Viewer */}
       <Lightbox
         open={open}
         close={() => setOpen(false)}
